@@ -1,0 +1,60 @@
+﻿@model SacramentMeetingPlanner.Models.Sacrament
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Sacrament</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Conducting)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Conducting)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HymnName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HymnName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HymnNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HymnNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Prayers)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Prayers)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Speakers)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Speakers)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Subjects)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Subjects)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MeetingDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MeetingDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a class="btn btn-default" asp-action="Index">Back to List</a>
+</div>
