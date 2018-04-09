@@ -1,0 +1,39 @@
+﻿@model IEnumerable<SacramentMeetingPlanner.Models.Prayers>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Prayers</h2>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"> @Html.DisplayNameFor(model=> model.OpeningPrayers)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"> @Html.DisplayNameFor(model=> model.ClosingPrayers)</a>
+</th>
+                <th>
+                    <a asp-action="Create">Create New</a>
+                </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OpeningPrayers)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClosingPrayers)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PrayersID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PrayersID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PrayersID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

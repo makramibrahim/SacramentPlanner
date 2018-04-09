@@ -1,0 +1,57 @@
+﻿@model SacramentMeetingPlanner.Models.Hymns
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Hymns</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OpeningHymn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OpeningHymn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OpeningHyNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OpeningHyNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SacramentHymn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SacramentHymn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SacrHyNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SacrHyNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClosingHymn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClosingHymn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClosingNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClosingNumber)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="HymnsID" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

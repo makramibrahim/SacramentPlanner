@@ -9,48 +9,44 @@ using SacramentMeetingPlanner.Models;
 
 namespace SacramentMeetingPlanner.Controllers
 {
-    public class SacramentsController : Controller
+    public class SpeakersController : Controller
     {
         private readonly SacramentMeetingPlannerContext _context;
 
-        public SacramentsController(SacramentMeetingPlannerContext context)
+        public SpeakersController(SacramentMeetingPlannerContext context)
         {
             _context = context;
         }
 
-        // GET: Sacraments
+        // GET: Speakers
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = searchString;
 
-            var Sacrament = from s in _context.Sacrament
-                           select s;
+            var Speakers = from s in _context.Speakers
+                          select s;
             if (!String.IsNullOrEmpty(searchString))
             {
-                Sacrament = Sacrament.Where(s => s.Subjects.Contains(searchString)
-                                       || s.Conducting.Contains(searchString));
+                Speakers = Speakers.Where(s => s.Speaker1.Contains(searchString)
+                                       || s.Speaker2.Contains(searchString)
+                                       || s.Speaker3.Contains(searchString));
             }
             switch (sortOrder)
             {
                 case "name_desc":
-                    Sacrament = Sacrament.OrderByDescending(s => s.Subjects);
+                    Speakers = Speakers.OrderByDescending(s => s.Speaker1);
                     break;
-                case "Date":
-                    Sacrament = Sacrament.OrderBy(s => s.MeetingDate);
-                    break;
-                case "date_desc":
-                    Sacrament = Sacrament.OrderByDescending(s => s.MeetingDate);
-                    break;
-                default:
-                    Sacrament = Sacrament.OrderBy(s => s.Conducting);
+               default:
+                    Speakers = Speakers.OrderBy(s => s.Speaker1);
                     break;
             }
-            return View(await Sacrament.AsNoTracking().ToListAsync());
+            return View(await Speakers.AsNoTracking().ToListAsync());
         }
 
-        // GET: Sacraments/Details/5
+
+
+        // GET: Speakers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -58,39 +54,39 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var speakers = await _context.Speakers
+                .SingleOrDefaultAsync(m => m.SpeakersID == id);
+            if (speakers == null)
             {
                 return NotFound();
             }
 
-            return View(sacrament);
+            return View(speakers);
         }
 
-        // GET: Sacraments/Create
+        // GET: Speakers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Sacraments/Create
+        // POST: Speakers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,MeetingDate,Conducting,Subjects")] Sacrament sacrament)
+        public async Task<IActionResult> Create([Bind("SpeakersID,Speaker1,Speaker2,Speaker3")] Speakers speakers)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sacrament);
+                _context.Add(speakers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(sacrament);
+            return View(speakers);
         }
 
-        // GET: Sacraments/Edit/5
+        // GET: Speakers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,22 +94,22 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament.SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var speakers = await _context.Speakers.SingleOrDefaultAsync(m => m.SpeakersID == id);
+            if (speakers == null)
             {
                 return NotFound();
             }
-            return View(sacrament);
+            return View(speakers);
         }
 
-        // POST: Sacraments/Edit/5
+        // POST: Speakers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,MeetingDate,Conducting,Subjects")] Sacrament sacrament)
+        public async Task<IActionResult> Edit(int id, [Bind("SpeakersID,Speaker1,Speaker2,Speaker3")] Speakers speakers)
         {
-            if (id != sacrament.ID)
+            if (id != speakers.SpeakersID)
             {
                 return NotFound();
             }
@@ -122,12 +118,12 @@ namespace SacramentMeetingPlanner.Controllers
             {
                 try
                 {
-                    _context.Update(sacrament);
+                    _context.Update(speakers);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SacramentExists(sacrament.ID))
+                    if (!SpeakersExists(speakers.SpeakersID))
                     {
                         return NotFound();
                     }
@@ -138,10 +134,10 @@ namespace SacramentMeetingPlanner.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sacrament);
+            return View(speakers);
         }
 
-        // GET: Sacraments/Delete/5
+        // GET: Speakers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -149,30 +145,30 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var speakers = await _context.Speakers
+                .SingleOrDefaultAsync(m => m.SpeakersID == id);
+            if (speakers == null)
             {
                 return NotFound();
             }
 
-            return View(sacrament);
+            return View(speakers);
         }
 
-        // POST: Sacraments/Delete/5
+        // POST: Speakers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sacrament = await _context.Sacrament.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Sacrament.Remove(sacrament);
+            var speakers = await _context.Speakers.SingleOrDefaultAsync(m => m.SpeakersID == id);
+            _context.Speakers.Remove(speakers);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SacramentExists(int id)
+        private bool SpeakersExists(int id)
         {
-            return _context.Sacrament.Any(e => e.ID == id);
+            return _context.Speakers.Any(e => e.SpeakersID == id);
         }
     }
 }

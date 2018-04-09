@@ -9,48 +9,42 @@ using SacramentMeetingPlanner.Models;
 
 namespace SacramentMeetingPlanner.Controllers
 {
-    public class SacramentsController : Controller
+    public class HymnsController : Controller
     {
         private readonly SacramentMeetingPlannerContext _context;
 
-        public SacramentsController(SacramentMeetingPlannerContext context)
+        public HymnsController(SacramentMeetingPlannerContext context)
         {
             _context = context;
         }
 
-        // GET: Sacraments
+        // GET: Hymns
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = searchString;
 
-            var Sacrament = from s in _context.Sacrament
-                           select s;
+            var Hymns = from s in _context.Hymns
+                        select s;
             if (!String.IsNullOrEmpty(searchString))
             {
-                Sacrament = Sacrament.Where(s => s.Subjects.Contains(searchString)
-                                       || s.Conducting.Contains(searchString));
+                Hymns = Hymns.Where(s => s.OpeningHymn.Contains(searchString)
+                                       || s.ClosingHymn.Contains(searchString)
+                                       || s.SacramentHymn.Contains(searchString));
             }
             switch (sortOrder)
             {
                 case "name_desc":
-                    Sacrament = Sacrament.OrderByDescending(s => s.Subjects);
-                    break;
-                case "Date":
-                    Sacrament = Sacrament.OrderBy(s => s.MeetingDate);
-                    break;
-                case "date_desc":
-                    Sacrament = Sacrament.OrderByDescending(s => s.MeetingDate);
+                    Hymns = Hymns.OrderByDescending(s => s.OpeningHymn);
                     break;
                 default:
-                    Sacrament = Sacrament.OrderBy(s => s.Conducting);
+                    Hymns = Hymns.OrderBy(s => s.OpeningHymn);
                     break;
             }
-            return View(await Sacrament.AsNoTracking().ToListAsync());
+            return View(await Hymns.AsNoTracking().ToListAsync());
         }
 
-        // GET: Sacraments/Details/5
+        // GET: Hymns/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -58,39 +52,39 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var hymns = await _context.Hymns
+                .SingleOrDefaultAsync(m => m.HymnsID == id);
+            if (hymns == null)
             {
                 return NotFound();
             }
 
-            return View(sacrament);
+            return View(hymns);
         }
 
-        // GET: Sacraments/Create
+        // GET: Hymns/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Sacraments/Create
+        // POST: Hymns/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,MeetingDate,Conducting,Subjects")] Sacrament sacrament)
+        public async Task<IActionResult> Create([Bind("HymnsID,OpeningHymn,OpeningHyNumber,SacramentHymn,SacrHyNumber,ClosingHymn,ClosingNumber")] Hymns hymns)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sacrament);
+                _context.Add(hymns);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(sacrament);
+            return View(hymns);
         }
 
-        // GET: Sacraments/Edit/5
+        // GET: Hymns/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,22 +92,22 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament.SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var hymns = await _context.Hymns.SingleOrDefaultAsync(m => m.HymnsID == id);
+            if (hymns == null)
             {
                 return NotFound();
             }
-            return View(sacrament);
+            return View(hymns);
         }
 
-        // POST: Sacraments/Edit/5
+        // POST: Hymns/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,MeetingDate,Conducting,Subjects")] Sacrament sacrament)
+        public async Task<IActionResult> Edit(int id, [Bind("HymnsID,OpeningHymn,OpeningHyNumber,SacramentHymn,SacrHyNumber,ClosingHymn,ClosingNumber")] Hymns hymns)
         {
-            if (id != sacrament.ID)
+            if (id != hymns.HymnsID)
             {
                 return NotFound();
             }
@@ -122,12 +116,12 @@ namespace SacramentMeetingPlanner.Controllers
             {
                 try
                 {
-                    _context.Update(sacrament);
+                    _context.Update(hymns);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SacramentExists(sacrament.ID))
+                    if (!HymnsExists(hymns.HymnsID))
                     {
                         return NotFound();
                     }
@@ -138,10 +132,10 @@ namespace SacramentMeetingPlanner.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sacrament);
+            return View(hymns);
         }
 
-        // GET: Sacraments/Delete/5
+        // GET: Hymns/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -149,30 +143,30 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var hymns = await _context.Hymns
+                .SingleOrDefaultAsync(m => m.HymnsID == id);
+            if (hymns == null)
             {
                 return NotFound();
             }
 
-            return View(sacrament);
+            return View(hymns);
         }
 
-        // POST: Sacraments/Delete/5
+        // POST: Hymns/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sacrament = await _context.Sacrament.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Sacrament.Remove(sacrament);
+            var hymns = await _context.Hymns.SingleOrDefaultAsync(m => m.HymnsID == id);
+            _context.Hymns.Remove(hymns);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SacramentExists(int id)
+        private bool HymnsExists(int id)
         {
-            return _context.Sacrament.Any(e => e.ID == id);
+            return _context.Hymns.Any(e => e.HymnsID == id);
         }
     }
 }

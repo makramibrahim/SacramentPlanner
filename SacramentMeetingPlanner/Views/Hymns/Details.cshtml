@@ -1,0 +1,54 @@
+﻿@model SacramentMeetingPlanner.Models.Hymns
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Hymns</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OpeningHymn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OpeningHymn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OpeningHyNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OpeningHyNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SacramentHymn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SacramentHymn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SacrHyNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SacrHyNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClosingHymn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClosingHymn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClosingNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClosingNumber)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.HymnsID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -9,8 +9,11 @@ namespace SacramentMeetingPlanner.Models
 {
     public class Sacrament
     {
-
-        public int ID               { get; set; }
+        public int ID { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Date")]
+        public DateTime MeetingDate { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -18,28 +21,10 @@ namespace SacramentMeetingPlanner.Models
 
         [Required]
         [StringLength(50)]
-        [Display(Name = "Hymn")]
-        public string HymnName      { get; set; }
+        public string Subjects { get; set; }
 
-        [Column("HymnNumber")]
-        [Display(Name= "Number")]
-        public int HymnNumber       { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Prayers       { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Speakers      { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Subjects      { get; set; }
-
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Date")]
-        public DateTime MeetingDate { get; set; }
+        public ICollection<Hymns> Hymns       { get; set; }
+        public ICollection<Prayers> Prayers   { get; set; }
+        public ICollection<Speakers> Speakers { get; set; }
     }
 }

@@ -9,48 +9,43 @@ using SacramentMeetingPlanner.Models;
 
 namespace SacramentMeetingPlanner.Controllers
 {
-    public class SacramentsController : Controller
+    public class PrayersController : Controller
     {
         private readonly SacramentMeetingPlannerContext _context;
 
-        public SacramentsController(SacramentMeetingPlannerContext context)
+        public PrayersController(SacramentMeetingPlannerContext context)
         {
             _context = context;
         }
 
-        // GET: Sacraments
+        // GET: Prayers
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = searchString;
 
-            var Sacrament = from s in _context.Sacrament
+            var Prayers = from s in _context.Prayers
                            select s;
             if (!String.IsNullOrEmpty(searchString))
             {
-                Sacrament = Sacrament.Where(s => s.Subjects.Contains(searchString)
-                                       || s.Conducting.Contains(searchString));
+                Prayers = Prayers.Where(s => s.OpeningPrayers.Contains(searchString)
+                                       || s.ClosingPrayers.Contains(searchString));
             }
             switch (sortOrder)
             {
                 case "name_desc":
-                    Sacrament = Sacrament.OrderByDescending(s => s.Subjects);
-                    break;
-                case "Date":
-                    Sacrament = Sacrament.OrderBy(s => s.MeetingDate);
-                    break;
-                case "date_desc":
-                    Sacrament = Sacrament.OrderByDescending(s => s.MeetingDate);
+                    Prayers = Prayers.OrderByDescending(s => s.OpeningPrayers);
                     break;
                 default:
-                    Sacrament = Sacrament.OrderBy(s => s.Conducting);
+                    Prayers = Prayers.OrderBy(s => s.OpeningPrayers);
                     break;
             }
-            return View(await Sacrament.AsNoTracking().ToListAsync());
+            return View(await Prayers.AsNoTracking().ToListAsync());
         }
 
-        // GET: Sacraments/Details/5
+
+
+        // GET: Prayers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -58,39 +53,39 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var prayers = await _context.Prayers
+                .SingleOrDefaultAsync(m => m.PrayersID == id);
+            if (prayers == null)
             {
                 return NotFound();
             }
 
-            return View(sacrament);
+            return View(prayers);
         }
 
-        // GET: Sacraments/Create
+        // GET: Prayers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Sacraments/Create
+        // POST: Prayers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,MeetingDate,Conducting,Subjects")] Sacrament sacrament)
+        public async Task<IActionResult> Create([Bind("PrayersID,OpeningPrayers,ClosingPrayers")] Prayers prayers)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sacrament);
+                _context.Add(prayers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(sacrament);
+            return View(prayers);
         }
 
-        // GET: Sacraments/Edit/5
+        // GET: Prayers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,22 +93,22 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament.SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var prayers = await _context.Prayers.SingleOrDefaultAsync(m => m.PrayersID == id);
+            if (prayers == null)
             {
                 return NotFound();
             }
-            return View(sacrament);
+            return View(prayers);
         }
 
-        // POST: Sacraments/Edit/5
+        // POST: Prayers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,MeetingDate,Conducting,Subjects")] Sacrament sacrament)
+        public async Task<IActionResult> Edit(int id, [Bind("PrayersID,OpeningPrayers,ClosingPrayers")] Prayers prayers)
         {
-            if (id != sacrament.ID)
+            if (id != prayers.PrayersID)
             {
                 return NotFound();
             }
@@ -122,12 +117,12 @@ namespace SacramentMeetingPlanner.Controllers
             {
                 try
                 {
-                    _context.Update(sacrament);
+                    _context.Update(prayers);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SacramentExists(sacrament.ID))
+                    if (!PrayersExists(prayers.PrayersID))
                     {
                         return NotFound();
                     }
@@ -138,10 +133,10 @@ namespace SacramentMeetingPlanner.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sacrament);
+            return View(prayers);
         }
 
-        // GET: Sacraments/Delete/5
+        // GET: Prayers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -149,30 +144,30 @@ namespace SacramentMeetingPlanner.Controllers
                 return NotFound();
             }
 
-            var sacrament = await _context.Sacrament
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (sacrament == null)
+            var prayers = await _context.Prayers
+                .SingleOrDefaultAsync(m => m.PrayersID == id);
+            if (prayers == null)
             {
                 return NotFound();
             }
 
-            return View(sacrament);
+            return View(prayers);
         }
 
-        // POST: Sacraments/Delete/5
+        // POST: Prayers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sacrament = await _context.Sacrament.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Sacrament.Remove(sacrament);
+            var prayers = await _context.Prayers.SingleOrDefaultAsync(m => m.PrayersID == id);
+            _context.Prayers.Remove(prayers);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SacramentExists(int id)
+        private bool PrayersExists(int id)
         {
-            return _context.Sacrament.Any(e => e.ID == id);
+            return _context.Prayers.Any(e => e.PrayersID == id);
         }
     }
 }
